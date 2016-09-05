@@ -1,0 +1,69 @@
+// GOOD-WE INVERTER DATA PACKET
+//
+// HEADER_MSB		0xAA								- 01 bytes
+// HEADER_LSB		0x55								- 01 bytes
+// ORIG_ADDRESS		0xAA 								- 01 bytes
+// DEST_ADDRESS		0xAA								- 01 bytes
+// CONTROL_CODE		0x00 for register and 0x01 for read	- 01 bytes
+// FUNCTION_CODE	0xAA								- 01 bytes
+// DATA_LENGTH		0xAA								- 01 bytes
+// SN + ADDRESS		0x00, 0x01, 0x02, ... 0x0F 0x10   	- 17 bytes
+// CHECK_SUM_MSB	0xCS								- 01 bytes
+// CHECK_SUM_LSB	0xCS								- 01 bytes
+//													------------------+
+// TOTAL BYTES											- 41 bytes
+//	
+//
+//     Registering new Inverter (control code == 0)
+//
+//  AP   off-line-query									   INV
+//	| --------------------------------------------------->> |
+//	|														|
+//  |  									 register_request	|
+//	| <<--------------------------------------------------- |
+//	|														|
+//  |    assign_address										|
+//	| --------------------------------------------------->> |
+//	|														|
+//  |  									 confirm_address	|
+//	| <<--------------------------------------------------- |
+//	|														|
+//  |    remove_register									|
+//	| --------------------------------------------------->> |
+//	|														|
+//  |  									 confirm_remove		|
+//	| <<--------------------------------------------------- |
+//	|														|
+//	
+//	
+//    Reading data from Inverter (control code == 1)
+//
+//  AP   request_info									   INV
+//	| --------------------------------------------------->> |
+//	|														|
+//  |  										 response_info	|
+//	| <<--------------------------------------------------- |
+//	|														|
+//	
+// FUNCTION CODES for REGISTER process CONTROL_CODE = 0x00
+//
+//  AP ADDRESS = 0x88
+//  ASSIGNED INV ADDRESS = 0x11, 0x12, 0x13, etc...
+//	PAYLOAD DATA = SERIAL NUMBER + ADDRESS 
+//  SERIAL NUMBER length =  16 bytes 
+//	ADDRESS length = 1 byte
+//
+// 	off_line_query 		FC=0x00, AP=0x88, INV=0x7F
+// 	register_request	FC=0x80, INV=0x7F, AP=0x88 + SN
+//
+// 	assign_address 		FC=0x01, AP=0x88, INV=0x7F + SN + ADDRESS=0x11
+// 	confirm_address		FC=0x81, INV=ADDRESS=0x11, AP=0x88
+//
+// 	remove_register		FC=0x02
+//  header(2),  orig, dest, CC,   FC,   LEN,  checksum(2) 
+//	0xAA, 0x55, 0x88, 0x11, 0x00, 0x02, 0x00, 0xCS, 0xCS
+//
+// 	remove_confirm		FC=0x82
+//  header(2),  orig, dest, CC,   FC,   LEN,  checksum(2) 
+//	0xAA, 0x55, 0x11, 0x88, 0x00, 0x82, 0x10, 0xCS, 0xCS
+//

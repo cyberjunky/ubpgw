@@ -1,0 +1,48 @@
+
+
+// GOOD-WE INVERTER DATA PACKET
+//
+// HEADER_MSB		0xAA								- 01 bytes
+// HEADER_LSB		0x55								- 01 bytes
+// ORIG_ADDRESS		0xAA 								- 01 bytes
+// DEST_ADDRESS		0xAA								- 01 bytes
+// CONTROL_CODE		0x00 for register and 0x01 for read	- 01 bytes
+// FUNCTION_CODE	0xAA								- 01 bytes
+// DATA_LENGTH		0xAA								- 01 bytes
+// SN + ADDRESS		0x00, 0x01, 0x02, ... 0x0F 0x10   	- 17 bytes
+// CHECK_SUM_MSB	0xCS								- 01 bytes
+// CHECK_SUM_LSB	0xCS								- 01 bytes
+//													------------------+
+// TOTAL BYTES											- 41 bytes
+//	
+//
+//     Registering new Inverter (control code == 0)
+//
+//  AP   off-line-query									   INV
+//	| --------------------------------------------------->> |
+//	
+//     									 register_request
+//	| <<--------------------------------------------------- |
+//	
+//       assign_address
+//	| --------------------------------------------------->> |
+//	
+//     									 confirm_address
+//	| <<--------------------------------------------------- |
+//	
+//       remove_register
+//	| --------------------------------------------------->> |
+//	
+//     									 confirm_remove
+//	| <<--------------------------------------------------- |
+//	
+//
+//
+//    Reading data from Inverter (control code == 1)
+//
+//  AP   request_info									   INV
+//	| --------------------------------------------------->> |
+//	
+//     										 response_info
+//	| <<--------------------------------------------------- |
+//	
